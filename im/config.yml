@@ -1,0 +1,6 @@
+ninja:
+  dataDir: "ninja" # 数据存储目录
+  logger:
+    level: info
+    dir: "./logs" # 日志目录
+    lineNum: false # 是否打印行号

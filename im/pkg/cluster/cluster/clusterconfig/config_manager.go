@@ -124,3 +124,35 @@ func (c *ConfigManager) existNodeByCfg(nodeId uint64, cfg *pb.Config) bool {
 	}
 	return false
 }
+
+func (c *ConfigManager) AddOrUpdateSlots(slots []*pb.Slot, cfg *pb.Config) {
+	c.Lock()
+	defer c.Unlock()
+	for i, slot := range slots {
+		if c.existSlotByCfg(slot.Id, cfg) {
+			cfg.Slots[i] = slot
+			continue
+		}
+		cfg.Slots = append(cfg.Slots, slot)
+	}
+}
+
+func (c *ConfigManager) existSlotByCfg(slotId uint32, cfg *pb.Config) bool {
+	for _, slot := range cfg.Slots {
+		if slot.Id == slotId {
+			return true
+		}
+	}
+	return false
+}
+
+func (c *ConfigManager) NodeIsOnline(id uint64) bool {
+	c.RLock()
+	defer c.RUnlock()
+	for _, node := range c.cfg.Nodes {
+		if node.Id == id {
+			return node.Online
+		}
+	}
+	return false
+}

@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"sync"
+	"time"
 )
 
 type ConfigManager struct {
@@ -155,4 +156,19 @@ func (c *ConfigManager) NodeIsOnline(id uint64) bool {
 		}
 	}
 	return false
+}
+
+func (c *ConfigManager) SetNodeOnline(nodeId uint64, online bool, cfg *pb.Config) {
+	c.Lock()
+	defer c.Unlock()
+	for _, node := range cfg.Nodes {
+		if node.Id == nodeId {
+			node.Online = online
+			if !online {
+				node.OfflineCount++
+				node.LastOffline = time.Now().Unix()
+			}
+			break
+		}
+	}
 }

@@ -28,3 +28,7 @@ type SlotLogInfoResp struct {
 	NodeId uint64
 	Slots  []SlotInfo
 }
+
+type SlotLogInfoReq struct {
+	SlotIds []uint32
+}

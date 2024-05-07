@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -308,4 +309,51 @@ func filterZapAtomicLevelByViper(level string) zapcore.Level {
 		return atomViper
 	}
 	return zap.InfoLevel
+}
+
+type Log interface {
+	Info(msg string, fields ...zap.Field)
+	Debug(msg string, fields ...zap.Field)
+	Error(msg string, fields ...zap.Field)
+	Warn(msg string, fields ...zap.Field)
+	Fatal(msg string, fields ...zap.Field)
+	Panic(msg string, fields ...zap.Field)
+}
+
+// log TLog
+type log struct {
+	prefix string // 日志前缀
+}
+
+// NewLog NewLog
+func NewLog(prefix string) *log {
+
+	return &log{prefix: prefix}
+}
+
+// Info Info
+func (t *log) Info(msg string, fields ...zap.Field) {
+	Info(fmt.Sprintf("【%s】%s", t.prefix, msg), fields)
+}
+
+// Debug Debug
+func (t *log) Debug(msg string, fields ...zap.Field) {
+	Debug(fmt.Sprintf("【%s】%s", t.prefix, msg), fields)
+}
+
+// Error Error
+func (t *log) Error(msg string, fields ...zap.Field) {
+	Error(fmt.Sprintf("【%s】%s", t.prefix, msg), fields)
+}
+
+// Warn Warn
+func (t *log) Warn(msg string, fields ...zap.Field) {
+	Warn(fmt.Sprintf("【%s】%s", t.prefix, msg), fields)
+}
+
+func (t *log) Fatal(msg string, fields ...zap.Field) {
+	Fatal(fmt.Sprintf("【%s】%s", t.prefix, msg), fields)
+}
+func (t *log) Panic(msg string, fields ...zap.Field) {
+	Panic(fmt.Sprintf("【%s】%s", t.prefix, msg), fields)
 }
